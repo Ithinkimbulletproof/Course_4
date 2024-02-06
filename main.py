@@ -48,9 +48,9 @@ class HeadHunter(Vacancy, APIManager, ABC):
             vacancy_info = {
                 "id": vacancy['id'],
                 "name": vacancy['name'],
-                "salary_ot": vacancy['salary']['from']
+                "salary_from": vacancy['salary']['from']
                 if vacancy.get('salary') else None,
-                "salary_do": vacancy['salary']['to']
+                "salary_before": vacancy['salary']['to']
                 if vacancy.get('salary') else None,
                 "responsibility": vacancy['snippet']
                 ['responsibility'],
@@ -83,8 +83,8 @@ def job_vacancy():
             print(
                 f"\nid - {hh['id']}\n"
                 f"Должность - {hh['name']}\n"
-                f"З.п от - {hh['salary_ot']}\n"
-                f"З.п до - {hh['salary_ot']}\n"
+                f"З.п от - {hh['salary_from']}\n"
+                f"З.п до - {hh['salary_before']}\n"
                 f"Описание - {hh['responsibility']}\n"
                 f"Дата - {hh['data']}\n")
 
