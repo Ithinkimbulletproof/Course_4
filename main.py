@@ -70,7 +70,7 @@ def job_vacancy():
     top_n = input('Введите кол-во вакансий: ')
     page = int(input('Введите страницу: '))
     hh_instance = HeadHunter(name, page, top_n)
-    combined_dict = {'HH': hh_instance.load_vacancy()}
+    vacancy_dict = {'HH': hh_instance.load_vacancy()}
 
     with open('Found_Vacancies.json', 'w', encoding='utf-8') as file:
-        json.dump(combined_dict, file, ensure_ascii=False, indent=2)
+        json.dump(vacancy_dict, file, ensure_ascii=False, indent=2)
