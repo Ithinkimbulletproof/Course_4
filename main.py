@@ -31,7 +31,7 @@ class HeadHunter(Vacancy, APIManager, ABC):
     def get_vacancies(self):
         """Выгрузка данных по 'HeadHunter' по запросам пользователя и
         возвращается словарь"""
-        data = requests.get(f"{self.url}/vacansies",
+        data = requests.get(f"{self.url}/vacancies",
                             params={'text': self.name,
                                     'page': self.page,
                                     'per_page': self.top_n}).json()
