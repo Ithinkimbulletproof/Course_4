@@ -49,9 +49,9 @@ class HeadHunter(Vacancy, APIManager, ABC):
             vacancy_info = {
                 "id": vacancy['id'],
                 "name": vacancy['name'],
-                "solary_ot": vacancy['salary']['from']
+                "salary_ot": vacancy['salary']['from']
                 if vacancy.get('salary') else None,
-                "solary_do": vacancy['salary']['to']
+                "salary_do": vacancy['salary']['to']
                 if vacancy.get('salary') else None,
                 "responsibility": vacancy['snippet']
                 ['responsibility'],
@@ -70,7 +70,19 @@ def job_vacancy():
     top_n = input('Введите кол-во вакансий: ')
     page = int(input('Введите страницу: '))
     hh_instance = HeadHunter(name, page, top_n)
-    vacancy_dict = {'HH': hh_instance.load_vacancy()}
+    vacancy_dict = {'HeadHunter': hh_instance.load_vacancy()}
 
     with open('Found_Vacancies.json', 'w', encoding='utf-8') as file:
         json.dump(vacancy_dict, file, ensure_ascii=False, indent=2)
+
+        for platform, data in vacancy_dict.items():
+            for item in data:
+                print(
+                    f"id - {item['id']}\n"
+                    f"Должность - {item['name']}\n"
+                    f"З.п от - {item['solary_ot']}\n"
+                    f"З.п до - {item['solary_do']}\n"
+                    f"Описание - {item['responsibility']}\n"
+                    f"Дата - {item['data']}\n")
+
+job_vacancy()
