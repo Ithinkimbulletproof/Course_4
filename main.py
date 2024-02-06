@@ -88,5 +88,4 @@ def job_vacancy():
                 f"Описание - {hh['responsibility']}\n"
                 f"Дата - {hh['data']}\n")
 
-
 job_vacancy()
