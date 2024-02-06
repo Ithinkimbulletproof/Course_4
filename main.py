@@ -1,7 +1,6 @@
 import requests
 from datetime import datetime
 import json
-import os
 from abc import ABC, abstractmethod
 
 
@@ -30,7 +29,7 @@ class HeadHunter(Vacancy, APIManager, ABC):
         self.url = 'https://api.hh.ru'
 
     def get_vacancies(self):
-        """Выгрузка данных по 'HH' по запросам пользователя и
+        """Выгрузка данных по 'HeadHunter' по запросам пользователя и
         возвращается словарь"""
         data = requests.get(f"{self.url}/vacansies",
                             params={'text': self.name,
@@ -75,14 +74,19 @@ def job_vacancy():
     with open('Found_Vacancies.json', 'w', encoding='utf-8') as file:
         json.dump(vacancy_dict, file, ensure_ascii=False, indent=2)
 
-        for platform, data in vacancy_dict.items():
-            for item in data:
-                print(
-                    f"id - {item['id']}\n"
-                    f"Должность - {item['name']}\n"
-                    f"З.п от - {item['solary_ot']}\n"
-                    f"З.п до - {item['solary_do']}\n"
-                    f"Описание - {item['responsibility']}\n"
-                    f"Дата - {item['data']}\n")
+        hh_instance.page = page
+        hh_data = hh_instance.load_vacancy()
+
+        vacancy_dict['HH'] = hh_data
+
+        for hh in vacancy_dict['HH']:
+            print(
+                f"\nid - {hh['id']}\n"
+                f"Должность - {hh['name']}\n"
+                f"З.п от - {hh['salary_ot']}\n"
+                f"З.п до - {hh['salary_ot']}\n"
+                f"Описание - {hh['responsibility']}\n"
+                f"Дата - {hh['data']}\n")
+
 
 job_vacancy()
