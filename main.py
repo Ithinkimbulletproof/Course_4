@@ -43,8 +43,9 @@ class HeadHunter(Vacancy, APIManager, ABC):
         data = self.get_vacancies()
         vacancies = []
         for vacancy in data.get('items', []):
-            published_at = datetime.strftime(vacancy['published_at'],
-                                             "%Y-%m-%dT%H:%M:%S%z")
+            published_at_str = vacancy['published_at']
+            published_at = datetime.strptime(published_at_str,
+                                             "%Y-%m-%dT%H:%M:%S%z").date()
             vacancy_info = {
                 "id": vacancy['id'],
                 "name": vacancy['name'],
