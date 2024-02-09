@@ -23,7 +23,7 @@ class Vacancy:
         return f"{self.name}"
 
 
-class HeadHunter(Vacancy, APIManager, ABC):
+class HeadHunter(Vacancy, APIManager):
     def __init__(self, name, page, top_n):
         super().__init__(name, page, top_n)
         self.url = 'https://api.hh.ru'
