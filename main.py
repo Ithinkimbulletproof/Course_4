@@ -1,92 +1,37 @@
-import requests
-from datetime import datetime
-import json
-from abc import ABC, abstractmethod
+from UserInteraction import UserInteraction
 
 
-class APIManager(ABC):
+def main():
+    user_input = input("Please, write name\nof vacancy for search: ")
 
-    @abstractmethod
-    def get_vacancies(self):
-        """получает вакансии по апи, возвращает список согластно
-        запросу пользователя"""
-        pass
+    while True:
+        users_salary = input("Text salary if you want\n"
+                             "to see vacancies with salary:\n")
+        if users_salary.isdigit():
+            break
+        print("\nPlease, text number or 'Enter...\n")
+
+    user = UserInteraction(user_input)
+
+    while True:
+        users_city = input("Now, you need text your city:\n").capitalize()
+        if users_city.isalpha():
+            break
+        print("\nI don't know about this city.\n")
+
+    user.sorted_salary(user.all_vacancy, int(users_salary), users_city)
+    user.get_top_vacancies(user.sort_salary)
+
+    user.make_info(user.top_salary)
+
+    while True:
+        number_vacancy = input("Choose number of top vacancy\n"
+                               "if you want to see more: ")
+        if number_vacancy.isdigit():
+            break
+
+    print(user.last_info(user.vacancies_list, number_vacancy))
 
 
-class Vacancy:
-    def __init__(self, name, page, top_n):
-        self.name = name
-        self.page = page
-        self.top_n = top_n
-
-    def __repr__(self):
-        return f"{self.name}"
-
-
-class HeadHunter(Vacancy, APIManager):
-    def __init__(self, name, page, top_n):
-        super().__init__(name, page, top_n)
-        self.url = 'https://api.hh.ru'
-
-    def get_vacancies(self):
-        """Выгрузка данных по 'HeadHunter' по запросам пользователя и
-        возвращается словарь"""
-        data = requests.get(f"{self.url}/vacancies",
-                            params={'text': self.name,
-                                    'page': self.page,
-                                    'per_page': self.top_n}).json()
-        return data
-
-    def load_vacancy(self):
-        """Проходим циклом по словарю берем из словаря только нужные
-        нам данные и записываем их в переменную 'vacancies' """
-        data = self.get_vacancies()
-        vacancies = []
-        for vacancy in data.get('items', []):
-            published_at_str = vacancy['published_at']
-            published_at = datetime.strptime(published_at_str,
-                                             "%Y-%m-%dT%H:%M:%S%z").date()
-            vacancy_info = {
-                "id": vacancy['id'],
-                "name": vacancy['name'],
-                "salary_from": vacancy['salary']['from']
-                if vacancy.get('salary') else None,
-                "salary_before": vacancy['salary']['to']
-                if vacancy.get('salary') else None,
-                "responsibility": vacancy['snippet']
-                ['responsibility'],
-                "data": published_at.strftime("%d.%m.%Y")
-            }
-            vacancies.append(vacancy_info)
-
-        return vacancies
-
-def job_vacancy():
-    """Основной код проекта, после внесения пользователем данных,
-    данные сортируются согласно запросу пользователя и вносятся
-    в json файл"""
-
-    name = input('Введите вакансию: ')
-    top_n = input('Введите кол-во вакансий: ')
-    page = int(input('Введите страницу: '))
-    hh_instance = HeadHunter(name, page, top_n)
-    vacancy_dict = {'HeadHunter': hh_instance.load_vacancy()}
-
-    with open('Found_Vacancies.json', 'w', encoding='utf-8') as file:
-        json.dump(vacancy_dict, file, ensure_ascii=False, indent=2)
-
-        hh_instance.page = page
-        hh_data = hh_instance.load_vacancy()
-
-        vacancy_dict['HH'] = hh_data
-
-        for hh in vacancy_dict['HH']:
-            print(
-                f"\nid - {hh['id']}\n"
-                f"Должность - {hh['name']}\n"
-                f"З.п от - {hh['salary_from']}\n"
-                f"З.п до - {hh['salary_before']}\n"
-                f"Описание - {hh['responsibility']}\n"
-                f"Дата - {hh['data']}\n")
-
-job_vacancy()
+if __name__ == '__main__':
+    main()
